@@ -12,19 +12,20 @@ on:
         required: true
         default: 'miui_TUCANA_21.5.31_cb42ec9bed_11.0.zip'
       ROM_NAME:
-        description: 'OS_TYPE'
+        description: 'ROM_TYPE'
         required: true
         default: 'miui'
       BUILD_TYPE:
-        description: 'SGSI_TYPE(AB, A, or BOTH)'
+        description: 'BUILD_TYPE(AB, A, or BOTH)'
         required: true
         default: 'AB'
 env:
   TZ: Asia/Shanghai
+  ZZ: MIO
 
 jobs:
   build:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     if: github.event.repository.owner.id == github.event.sender.id
 
     steps:
@@ -65,6 +66,13 @@ jobs:
               cd $GITHUB_WORKSPACE/ErfanGSIs/output
               curl -sL https://git.io/file-transfer | sh
               ./transfer wet ./final/GSI.zip
-
+              echo Done > $GITHUB_WORKSPACE/ErfanGSIs/output/s.txt
+       - name: 上传发布...
+         uses: ncipollo/release-action@v1.8.0
+         with:
+          artifacts: "${{ github.workspace }}/ErfanGSIs/output/*"
+          tag: "ERDAN_${{ env.BUILD_TIME }}"
+          bodyFile: "${{ github.workspace }}/ErfanGSIs/output/s.txt"
+          token: ${{ secrets.GITHUB_TOKEN }}
          
             
