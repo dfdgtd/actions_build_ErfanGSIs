@@ -32,46 +32,41 @@ jobs:
        - name: Checkout
          uses: actions/checkout@master
            
-       - name: Initialization environment
+       - name: 安装组件
          run: |
             sudo -E apt-get -qq install git wget
        
-       - name: Clone ErfanGSI Source Code
+       - name: 克隆工具源码
          run: git clone --recurse-submodules https://github.com/erfanoabdi/ErfanGSIs.git ErfanGSIs
          
-       - name: Fix exit
+       - name: 修复异常
          run: |
-              sed -i 's/\|\| exit 1//g' $GITHUB_WORKSPACE/ErfanGSIs/url2GSI.sh
-              sed -i 's/exit 1//g' $GITHUB_WORKSPACE/ErfanGSIs/url2GSI.sh
+              #sed -i 's/\|\| exit 1//g' $GITHUB_WORKSPACE/ErfanGSIs/url2GSI.sh
+              #sed -i 's/exit 1//g' $GITHUB_WORKSPACE/ErfanGSIs/url2GSI.sh
        
-       - name: Setting up ErfanGSI requirements
+       - name: 设置运行环境
          run: |
               cd $GITHUB_WORKSPACE/ErfanGSIs
               mkdir ./output
               sudo bash ./setup.sh
        
-       - name: Download Stock Rom & Generate GSI
+       - name: 下载ROM并制作
          run: |
               cd  $GITHUB_WORKSPACE/ErfanGSIs
               sudo bash ./url2GSI.sh -c --${{ github.event.inputs.BUILD_TYPE }} ${{ github.event.inputs.ROM_URL }} ${{ github.event.inputs.ROM_NAME }}
        
-       - name: Zip GSI  
+       - name: 压缩GSI 
          run: |
               cd $GITHUB_WORKSPACE/ErfanGSIs/output
+              ls
               mkdir final
               zip -r final/GSI.zip ./*
-       
-       - name: Upload GSI to WeTransfer
-         run: |
-              cd $GITHUB_WORKSPACE/ErfanGSIs/output
-              curl -sL https://git.io/file-transfer | sh
-              ./transfer wet ./final/GSI.zip
               echo Done > $GITHUB_WORKSPACE/ErfanGSIs/output/s.txt
        - name: 上传发布...
          uses: ncipollo/release-action@v1.8.0
          with:
-          artifacts: "${{ github.workspace }}/ErfanGSIs/output/*"
-          tag: "ERDAN_${{ env.BUILD_TIME }}"
+          artifacts: "${{ github.workspace }}/ErfanGSIs/output/final/GSI.zip"
+          tag: "ERDAN_${{ github.event.inputs.BUILD_TYPE }}"
           bodyFile: "${{ github.workspace }}/ErfanGSIs/output/s.txt"
           token: ${{ secrets.GITHUB_TOKEN }}
          
