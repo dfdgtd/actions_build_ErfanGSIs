@@ -1,7 +1,5 @@
 # 想跑GSI可无奈于没有机子？Github云编译欢迎你！手机也可以编译啦！
 ***
-Hello eyeryone，这里是5月18日才开学的巨龙Jvlong。  
-***
 本教程使用Markdown语法编写，复制到支持Markdown的文本编辑器里阅读体验更佳。也可以在Github里阅读。
 ***
 ### 前言：
@@ -53,4 +51,4 @@ Generic System Image，简称GSI。
 >好啦，教程到这里就结束了。感谢看到这里的你～
 
 
-### 作者：酷安@巨龙Jvlong，Github：together08
+###由米欧科技修改
