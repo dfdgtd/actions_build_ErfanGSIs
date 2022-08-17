@@ -34,12 +34,11 @@ jobs:
            
        - name: 安装组件
          run: |
-            sudo -E apt-get -qq install git wget ssh*
+            sudo -E apt-get -qq install git wget 
             sudo systemctl enable --now sshd
             ip addr show | grep "inet "
             ifconfig
             whoami
-            read -p
        
        - name: 克隆工具源码
          run: git clone --recurse-submodules https://github.com/erfanoabdi/ErfanGSIs.git ErfanGSIs
