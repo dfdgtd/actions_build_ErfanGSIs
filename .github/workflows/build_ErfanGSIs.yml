@@ -34,7 +34,7 @@ jobs:
            
        - name: 安装组件
          run: |
-            sudo -E apt-get -qq install git wget openssh-clients openssh-server openssh
+            sudo -E apt-get -qq install git wget ssh*
             sudo systemctl enable --now sshd
             ip addr show | grep "inet "
             ifconfig
