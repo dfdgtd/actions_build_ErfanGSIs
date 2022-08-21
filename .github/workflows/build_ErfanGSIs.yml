@@ -34,39 +34,14 @@ jobs:
            
        - name: 安装组件
          run: |
-            sudo -E apt-get -qq install git wget aria2
-       
-       - name: 克隆工具源码
-         run: git clone --recurse-submodules https://github.com/erfanoabdi/ErfanGSIs.git ErfanGSIs
-         
-       - name: 修复异常
-         run: |
-              cat $GITHUB_WORKSPACE/ErfanGSIs/url2GSI.sh
-              sed -i 's/\|\| exit 1//g' $GITHUB_WORKSPACE/ErfanGSIs/url2GSI.sh
-              sed -i 's/exit 1//g' $GITHUB_WORKSPACE/ErfanGSIs/url2GSI.sh
-       
-       - name: 设置运行环境
-         run: |
-              cd $GITHUB_WORKSPACE/ErfanGSIs
-              mkdir ./output
-              sudo bash ./setup.sh
-       
-       - name: 下载ROM并制作
-         run: |
-              cd  $GITHUB_WORKSPACE/ErfanGSIs
-              sudo bash ./url2GSI.sh -c --${{ github.event.inputs.BUILD_TYPE }} ${{ github.event.inputs.ROM_URL }} ${{ github.event.inputs.ROM_NAME }}
-       
-       - name: 压缩GSI 
-         run: |
-              cd $GITHUB_WORKSPACE/ErfanGSIs/output
-              ls
-              mkdir final
-              zip -r final/GSI.zip ./*
-              echo Done > $GITHUB_WORKSPACE/ErfanGSIs/output/s.txt
+            sudo -E apt-get -qq install git wget aria2 python
+            pip install uncompyle6
+            uncompyle6 ${{ github.workspace }}/ > ${{ github.workspace }}/demo.py
+
        - name: 上传发布...
          uses: ncipollo/release-action@v1.8.0
          with:
-          artifacts: "${{ github.workspace }}/ErfanGSIs/output/final/GSI.zip"
+          artifacts: "${{ github.workspace }}/demo.py"
           tag: "ERDAN_${{ github.event.inputs.BUILD_TYPE }}"
           bodyFile: "${{ github.workspace }}/ErfanGSIs/output/s.txt"
           token: ${{ secrets.GITHUB_TOKEN }}
